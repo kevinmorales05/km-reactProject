@@ -134,7 +134,3 @@
     font-size: 0.75rem;
     font-weight: bold;
   }
-  
-  .list li:has(input:checked) label:hover::before {
-    background: hsl(200, 100%, 30%);
-  }
