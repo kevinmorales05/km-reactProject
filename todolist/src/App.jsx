@@ -1,49 +1,48 @@
 import { useState } from "react";
+import { NewTodoForm } from "./components/NewTodoForm";
+import { TodoList } from "./components/TodoList";
 
 export default function App() {
-  const [newItem, setNewItem] = useState("Comida china");
+  const [newItem, setNewItem] = useState("");
   const [todos, setTodos] = useState([]);
-  function handleSubmit(e) {
-    e.preventDefault();
+
+  function addTodo(title) {
+        
     setTodos([
       ...todos,
       {
         id: crypto.randomUUID(),
-        title: newItem,
+        title: title,
         completed: false,
       },
     ]);
-    console.log(todos);
+    setNewItem("");
   }
+function toggleTodo(id, completed) {
+  console.log('state free ', completed)
+  setTodos(currentTodos => {
+    return currentTodos.map(todo => {
+      if(todo.id === id){
+        //todo.completed = completed;
+        console.log('state',completed);
+        return {...todo, completed}
+      }
+      return todo;
+    })
+  })
+}
+
+function deleteTodo(id){
+  setTodos(currentTodos => {
+    return currentTodos.filter( todo => todo.id !== id)
+  })
+}
 
   return (
     <>
-      <form action="" onSubmit={handleSubmit} className="new-item-form">
-        <div className="form-row">
-          <label htmlFor="item">New Item</label>
-          <input
-            value={newItem}
-            onChange={(e) => setNewItem(e.target.value)}
-            type="text"
-            id="item"
-          />
-        </div>
-        <button className="btn">Add</button>
-      </form>
+     <NewTodoForm onSubmit={addTodo} />
       <h1 className="header">Todo List</h1>
-      <ul className="list">
-        {todos.map((todo) => {
-          return (
-            <li key={todo.key}>
-              <label htmlFor="">
-                <input type="checkbox" checked={todo.checked} />
-                {todo.title}
-              </label>
-              <button className="btn btn-danger">Delete</button>
-            </li>
-          );
-        })}
-      </ul>
+      <TodoList todos={todos} toggleTodo={toggleTodo} deleteTodo={deleteTodo} />
     </>
   );
 }
